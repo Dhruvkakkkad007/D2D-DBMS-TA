@@ -1,0 +1,234 @@
+-- Create Database
+CREATE DATABASE D2D_TA;
+
+-- Use Database
+USE D2D_TA;
+
+
+-- Create DEPOSIT Table
+CREATE TABLE DEPOSIT (
+    ACTNO INT,
+    CNAME VARCHAR(50),
+    BNAME VARCHAR(50),
+    AMOUNT DECIMAL(8,2),
+    ADATE DATETIME
+);
+
+-- Create BRANCH Table
+CREATE TABLE BRANCH (
+    BNAME VARCHAR(50),
+    CITY VARCHAR(50)
+);
+
+-- Create CUSTOMERS Table
+CREATE TABLE CUSTOMERS (
+    CNAME VARCHAR(50),
+    CITY VARCHAR(50)
+);
+
+-- Create BORROW Table
+CREATE TABLE BORROW (
+    LOANNO INT,
+    CNAME VARCHAR(50),
+    BNAME VARCHAR(50),
+    AMOUNT DECIMAL(8,2)
+);
+
+
+INSERT INTO DEPOSIT VALUES
+(101, 'ANIL', 'VRCE', 1000.00, '1995-03-01'),
+(102, 'SUNIL', 'AJNI', 5000.00, '1996-01-04'),
+(103, 'MEHUL', 'KAROLBAGH', 3500.00, '1995-11-17'),
+(104, 'MADHURI', 'CHANDI', 1200.00, '1995-12-17'),
+(105, 'PRAMOD', 'M.G. ROAD', 3000.00, '1996-03-27'),
+(106, 'SANDIP', 'ANDHERI', 2000.00, '1996-03-31'),
+(107, 'SHIVANI', 'VIRAR', 1000.00, '1995-09-05'),
+(108, 'KRANTI', 'NEHRU PLACE', 5000.00, '1995-07-02'),
+(109, 'MINU', 'POWAI', 7000.00, '1995-08-10');
+
+
+
+INSERT INTO BRANCH VALUES
+('VRCE', 'NAGPUR'),
+('AJNI', 'NAGPUR'),
+('KAROLBAGH', 'DELHI'),
+('CHANDI', 'DELHI'),
+('DHARAMPETH', 'NAGPUR'),
+('M.G. ROAD', 'BANGLORE'),
+('ANDHERI', 'BOMBAY'),
+('VIRAR', 'BOMBAY'),
+('NEHRU PLACE', 'DELHI'),
+('POWAI', 'BOMBAY');
+
+
+INSERT INTO CUSTOMERS VALUES
+('ANIL', 'CALCUTTA'),
+('SUNIL', 'DELHI'),
+('MEHUL', 'BARODA'),
+('MANDAR', 'PATNA'),
+('MADHURI', 'NAGPUR'),
+('PRAMOD', 'NAGPUR'),
+('SANDIP', 'SURAT'),
+('SHIVANI', 'BOMBAY'),
+('KRANTI', 'BOMBAY'),
+('NAREN', 'BOMBAY');
+
+
+
+INSERT INTO BORROW VALUES
+(201, 'ANIL', 'VRCE', 1000.00),
+(206, 'MEHUL', 'AJNI', 5000.00),
+(311, 'SUNIL', 'DHARAMPETH', 3000.00),
+(321, 'MADHURI', 'ANDHERI', 2000.00),
+(375, 'PRAMOD', 'VIRAR', 8000.00),
+(481, 'KRANTI', 'NEHRU PLACE', 3000.00);
+
+																--PART-A--
+-- 1. Retrieve all data from table DEPOSIT.
+SELECT * FROM DEPOSIT;
+
+-- 2. Retrieve all data from table BORROW.
+SELECT * FROM BORROW;
+
+-- 3. Display Account No, Customer Name & Amount from DEPOSIT.
+SELECT ACTNO, CNAME, AMOUNT FROM DEPOSIT;
+
+-- 4. Display Loan No, Amount from BORROW.
+SELECT LOANNO, AMOUNT FROM BORROW;
+
+-- 5. Display loan details of all customers who belongs to ‘ANDHERI’ branch.
+SELECT * FROM BORROW WHERE BNAME = 'ANDHERI';
+
+-- 6. Give account no and amount where account no = 106
+SELECT ACTNO, AMOUNT FROM DEPOSIT WHERE ACTNO = 106;
+
+-- 7. Name of borrowers having amount > 5000
+SELECT CNAME FROM BORROW WHERE AMOUNT > 5000;
+
+-- 8. Customers who opened account after '1-12-95'
+SELECT CNAME FROM DEPOSIT WHERE ADATE > '1995-12-01';
+
+-- 9. Customers whose account no < 105
+SELECT CNAME FROM DEPOSIT WHERE ACTNO < 105;
+
+-- 10. Customers from NAGPUR or DELHI
+SELECT CNAME FROM CUSTOMERS 
+WHERE CITY = 'NAGPUR' OR CITY = 'DELHI';
+
+SELECT CNAME FROM CUSTOMERS 
+WHERE CITY IN ('NAGPUR', 'DELHI');
+
+-- 11. Customers with amount > 4000 and account no < 105
+SELECT CNAME, BNAME FROM DEPOSIT
+WHERE AMOUNT > 4000 AND ACTNO < 105;
+
+-- 12. Borrowers amount between 3000 and 8000
+SELECT * FROM BORROW
+WHERE AMOUNT BETWEEN 3000 AND 8000;
+
+-- 13. Depositors not from ANDHERI
+SELECT * FROM DEPOSIT
+WHERE BNAME <> 'ANDHERI';
+
+-- 14. Customers from AJNI, KAROLBAGH, M.G. ROAD and ACTNO < 104
+SELECT ACTNO, CNAME, AMOUNT FROM DEPOSIT
+WHERE BNAME IN ('AJNI', 'KAROLBAGH', 'M.G. ROAD')
+AND ACTNO < 104;
+
+-- 15. Borrowers not from VIRAR or AJNI
+SELECT LOANNO, CNAME FROM BORROW
+WHERE BNAME NOT IN ('VIRAR', 'AJNI');
+
+-- 16. Customers other than MINU
+SELECT CNAME FROM DEPOSIT
+WHERE CNAME <> 'MINU';
+
+-- 17. Customers whose branch is NULL
+SELECT CNAME FROM DEPOSIT
+WHERE BNAME IS NULL;
+
+-- 18. Unique branches
+SELECT DISTINCT BNAME FROM BRANCH;
+
+-- 19. First 50% records from BORROW
+SELECT TOP 50 PERCENT * FROM BORROW;
+
+-- 20. First five account numbers
+SELECT TOP 5 ACTNO FROM DEPOSIT;
+
+
+														--PART-B--
+-- 1. First five customers details
+SELECT TOP 5 * FROM DEPOSIT;
+
+-- 2. First three depositors with amount > 1000
+SELECT TOP 3 * FROM DEPOSIT
+WHERE AMOUNT > 1000;
+
+-- 3. First five borrowers not from ANDHERI
+SELECT TOP 5 LOANNO, CNAME FROM BORROW
+WHERE BNAME <> 'ANDHERI';
+
+-- 4. Account numbers NOT between 105 and 109
+SELECT * FROM DEPOSIT
+WHERE ACTNO NOT BETWEEN 105 AND 109;
+
+-- 5. BORROW where amount >1000 and <=7000 AND loan no between 250 and 600
+SELECT * FROM BORROW
+WHERE AMOUNT > 1000 
+AND AMOUNT <= 7000
+AND LOANNO BETWEEN 250 AND 600;
+
+
+														--PART-C--
+
+-- 1. Details of customers who deposited > 5000 (without *)
+SELECT ACTNO, CNAME, BNAME, AMOUNT, ADATE
+FROM DEPOSIT
+WHERE AMOUNT > 5000;
+
+-- 2. Unique customer names with city
+SELECT DISTINCT CNAME, CITY FROM CUSTOMERS;
+
+-- 3. Borrow where amount > 3000 and loan no NOT multiple of 3
+SELECT * FROM BORROW
+WHERE AMOUNT > 3000 
+AND LOANNO % 3 <> 0;
+
+-- 4. Complex condition
+SELECT * FROM DEPOSIT
+WHERE AMOUNT > 2000
+AND ACTNO BETWEEN 100 AND 110
+AND (ADATE > '1995-03-01' OR ADATE < '1996-03-27');
+
+-- 5. Odd loan numbers
+SELECT * FROM BORROW
+WHERE LOANNO % 2 = 1;
+
+-- Even loan numbers
+SELECT * FROM BORROW
+WHERE LOANNO % 2 = 0;
+
+
+--IN ONE QUERY---
+
+--SYNTAX--
+
+--SELECT column_name,
+--       CASE
+--           WHEN condition1 THEN result1
+--           WHEN condition2 THEN result2
+--           ...
+--           ELSE resultN
+--       END AS alias_name
+--FROM table_name;
+
+
+
+-- Odd and Even in one result
+SELECT 
+    LOANNO,
+    CASE WHEN LOANNO % 2 = 0 THEN LOANNO END AS EVEN,
+
+    CASE WHEN LOANNO % 2 = 1 THEN LOANNO END AS ODD
+FROM BORROW;
