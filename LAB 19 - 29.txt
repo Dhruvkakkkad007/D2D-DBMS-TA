@@ -1,10 +1,8 @@
 DBMS LAB MANUAL – SOLUTIONS
-2301CS361 | Labs 19 to 29 | B.Tech Semester 3 | Darshan University
 
-📌 NOTE: Labs 19–28 use MongoDB (NoSQL). Lab 29 uses MS SQL Server. MongoDB queries run in MongoDB Shell (mongosh).
 
 LAB 19 – use, drop, createCollection, dropCollection, insertOne, insertMany
-📌 NOTE: These are MongoDB commands. Run them in mongosh (MongoDB Shell).
+
 
 PART A
 -- Q: 1. Create a new database named 'Darshan'
@@ -1299,9 +1297,7 @@ db.Student.insertOne({
 
 
 LAB 29 – MS SQL Server – Revision Lab
-📌 NOTE: This lab uses MS SQL Server. All queries below run in SQL Server Management Studio (SSMS).
 
-SETUP – Create Tables
 -- Create Database
 CREATE DATABASE SalesDB;
 USE SalesDB;
@@ -1539,5 +1535,4 @@ db.PRODUCT.aggregate([
 ])
 
 
---- END OF LAB SOLUTIONS (Labs 19–29) ---
-Prepared for teaching | Darshan University | DBMS Lab 2301CS361
+
