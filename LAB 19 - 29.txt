@@ -1,0 +1,1543 @@
+DBMS LAB MANUAL – SOLUTIONS
+2301CS361 | Labs 19 to 29 | B.Tech Semester 3 | Darshan University
+
+📌 NOTE: Labs 19–28 use MongoDB (NoSQL). Lab 29 uses MS SQL Server. MongoDB queries run in MongoDB Shell (mongosh).
+
+LAB 19 – use, drop, createCollection, dropCollection, insertOne, insertMany
+📌 NOTE: These are MongoDB commands. Run them in mongosh (MongoDB Shell).
+
+PART A
+-- Q: 1. Create a new database named 'Darshan'
+use Darshan
+
+-- Q: 2. Create another new database named 'DIET'
+use DIET
+
+-- Q: 3. List all databases
+show dbs
+
+-- Q: 4. Check the current database
+db
+
+-- Q: 5. Drop 'DIET' database
+use DIET
+
+db.dropDatabase()
+
+-- Q: 6. Create collection 'Student' in 'Darshan' database
+use Darshan
+db.createCollection('Student')
+
+-- Q: 7. Create collection 'Department' in 'Darshan' database
+db.createCollection('Department')
+
+-- Q: 8. List all collections in 'Darshan' database
+show collections
+
+-- Q: 9. Insert single document using insertOne into 'Department'
+db.Department.insertOne({ Dname: 'CE', HOD: 'Patel' })
+
+-- Q: 10. Insert two documents using insertMany into 'Department'
+db.Department.insertMany([
+  { Dname: 'IT' },
+  { Dname: 'ICT' }
+])
+
+-- Q: 11. Drop collection 'Department'
+db.Department.drop()
+
+-- Q: 12. Insert single document into 'Student' (Fields: Name, City, Branch, Semester, Age)
+db.Student.insertOne({
+  Name: 'Rahul',
+  City: 'Rajkot',
+  Branch: 'CE',
+  Semester: 3,
+  Age: 20
+})
+
+-- Q: 13. Insert three documents using insertMany into 'Student'
+db.Student.insertMany([
+  { Name: 'Priya', City: 'Ahmedabad', Branch: 'IT', Semester: 3, Age: 21 },
+  { Name: 'Ravi',  City: 'Baroda',    Branch: 'ME', Semester: 5, Age: 22 },
+  { Name: 'Neha',  City: 'Surat',     Branch: 'EC', Semester: 5, Age: 21 }
+])
+
+-- Q: 14. Check whether 'Student' collection exists or not
+db.getCollectionNames().includes('Student')
+
+-- Q: 15. Check the stats of 'Student' collection
+db.Student.stats()
+
+-- Q: 16. Drop the 'Student' collection
+db.Student.drop()
+
+-- Q: 17. Create a collection named 'Deposit'
+db.createCollection('Deposit')
+
+-- Q: 18. Insert following data into 'Deposit' collection
+db.Deposit.insertMany([
+  { ACTNO:101, CNAME:'ANIL',    BNAME:'VRCE',        AMOUNT:1000, CITY:'RAJKOT' },
+  { ACTNO:102, CNAME:'SUNIL',   BNAME:'AJNI',        AMOUNT:5000, CITY:'SURAT'  },
+  { ACTNO:103, CNAME:'MEHUL',   BNAME:'KAROLBAGH',   AMOUNT:3500, CITY:'BARODA' },
+  { ACTNO:104, CNAME:'MADHURI', BNAME:'CHANDI',      AMOUNT:1200, CITY:'AHMEDABAD' },
+  { ACTNO:105, CNAME:'PRMOD',   BNAME:'M.G. ROAD',   AMOUNT:3000, CITY:'SURAT'  },
+  { ACTNO:106, CNAME:'SANDIP',  BNAME:'ANDHERI',     AMOUNT:2000, CITY:'RAJKOT' },
+  { ACTNO:107, CNAME:'SHIVANI', BNAME:'VIRAR',       AMOUNT:1000, CITY:'SURAT'  },
+  { ACTNO:108, CNAME:'KRANTI',  BNAME:'NEHRU PLACE', AMOUNT:5000, CITY:'RAJKOT' }
+])
+
+-- Q: 19. Display all documents of 'Deposit' collection
+db.Deposit.find()
+
+-- Q: 20. Drop the 'Deposit' collection
+db.Deposit.drop()
+
+PART B
+-- Q: 1. Create database 'Computer'
+use Computer
+
+-- Q: 2. Create collection 'Faculty'
+db.createCollection('Faculty')
+
+-- Q: 3. Insert single document using insertOne into 'Faculty'
+db.Faculty.insertOne({ FID:1, FNAME:'ANIL', BNAME:'CE', SALARY:10000, JDATE:'1-3-95' })
+
+-- Q: 4. Insert remaining documents using insertMany into 'Faculty'
+db.Faculty.insertMany([
+  { FID:2, FNAME:'SUNIL',   BNAME:'CE', SALARY:50000, JDATE:'4-1-96'   },
+  { FID:3, FNAME:'MEHUL',   BNAME:'IT', SALARY:35000, JDATE:'17-11-95' },
+  { FID:4, FNAME:'MADHURI', BNAME:'IT', SALARY:12000, JDATE:'17-12-95' },
+  { FID:5, FNAME:'PRMOD',   BNAME:'CE', SALARY:30000, JDATE:'27-3-96'  },
+  { FID:6, FNAME:'SANDIP',  BNAME:'CE', SALARY:20000, JDATE:'31-3-96'  },
+  { FID:7, FNAME:'SHIVANI', BNAME:'CE', SALARY:10000, JDATE:'5-9-95'   },
+  { FID:8, FNAME:'KRANTI',  BNAME:'IT', SALARY:50000, JDATE:'2-7-95'   }
+])
+
+-- Q: 5. Display all documents of 'Faculty'
+db.Faculty.find()
+
+-- Q: 6. Drop 'Faculty' collection
+db.Faculty.drop()
+
+-- Q: 7. Drop 'Computer' database
+db.dropDatabase()
+
+PART C – Perform using MongoDB Compass UI
+Same operations as Part B, but performed via the MongoDB Compass graphical interface:
+  1. Open Compass → Create Database 'Computer' → Create Collection 'Faculty'
+  2. Click 'Add Data' → Insert Document (paste JSON)
+  3. To view: click collection → Browse Documents tab
+  4. To drop: right-click collection → Drop Collection
+
+LAB 20 – find, limit, skip, sort
+📌 NOTE: Create Database: use BANK_INFO  |  Collection: Deposit
+
+SETUP – Create Database and Insert Data
+use BANK_INFO
+
+db.Deposit.insertMany([
+  { ACTNO:101, CNAME:'ANIL',    BNAME:'VRCE',        AMOUNT:1000, ADATE:'1-3-95'   },
+  { ACTNO:102, CNAME:'SUNIL',   BNAME:'AJNI',        AMOUNT:5000, ADATE:'4-1-96'   },
+  { ACTNO:103, CNAME:'MEHUL',   BNAME:'KAROLBAGH',   AMOUNT:3500, ADATE:'17-11-95' },
+  { ACTNO:104, CNAME:'MADHURI', BNAME:'CHANDI',      AMOUNT:1200, ADATE:'17-12-95' },
+  { ACTNO:105, CNAME:'PRMOD',   BNAME:'M.G. ROAD',   AMOUNT:3000, ADATE:'27-3-96'  },
+  { ACTNO:106, CNAME:'SANDIP',  BNAME:'ANDHERI',     AMOUNT:2000, ADATE:'31-3-96'  },
+  { ACTNO:107, CNAME:'SHIVANI', BNAME:'VIRAR',       AMOUNT:1000, ADATE:'5-9-95'   },
+  { ACTNO:108, CNAME:'KRANTI',  BNAME:'NEHRU PLACE', AMOUNT:5000, ADATE:'2-7-95'   }
+])
+
+PART A
+-- Q: 1. Retrieve/Display every document
+db.Deposit.find()
+
+-- Q: 2. Display only one document (findOne)
+db.Deposit.findOne()
+
+-- Q: 3. Insert one document (ACTNO 109)
+db.Deposit.insertOne({ ACTNO:109, CNAME:'KIRTI', BNAME:'VIRAR', AMOUNT:3000, ADATE:'3-5-97' })
+
+-- Q: 4. Insert two documents (ACTNO 110, 111)
+db.Deposit.insertMany([
+  { ACTNO:110, CNAME:'MITALI', BNAME:'ANDHERI',     AMOUNT:4500, ADATE:'4-9-95'  },
+  { ACTNO:111, CNAME:'RAJIV',  BNAME:'NEHRU PLACE', AMOUNT:7000, ADATE:'2-10-98' }
+])
+
+-- Q: 5. Display all documents of 'VIRAR' branch
+db.Deposit.find({ BNAME: 'VIRAR' })
+
+-- Q: 6. Display documents where AMOUNT is between 3000 and 5000
+db.Deposit.find({ AMOUNT: { $gte: 3000, $lte: 5000 } })
+
+-- Q: 7. AMOUNT > 2000 AND branch is VIRAR
+db.Deposit.find({ AMOUNT: { $gt: 2000 }, BNAME: 'VIRAR' })
+
+-- Q: 8. Display only CNAME, BNAME, AMOUNT fields (projection)
+db.Deposit.find({}, { CNAME:1, BNAME:1, AMOUNT:1, _id:0 })
+
+-- Q: 9. Sort by CNAME ascending
+db.Deposit.find().sort({ CNAME: 1 })
+
+-- Q: 10. Sort by BNAME descending
+db.Deposit.find().sort({ BNAME: -1 })
+
+-- Q: 11. Sort by ACTNO ascending, AMOUNT descending
+db.Deposit.find().sort({ ACTNO: 1, AMOUNT: -1 })
+
+-- Q: 12. Display only two documents
+db.Deposit.find().limit(2)
+
+-- Q: 13. Display 3rd document (skip 2, limit 1)
+db.Deposit.find().skip(2).limit(1)
+
+-- Q: 14. Display 6th and 7th documents (skip 5, limit 2)
+db.Deposit.find().skip(5).limit(2)
+
+-- Q: 15. Count of documents in Deposit
+db.Deposit.countDocuments()
+
+PART B – Student Collection
+-- First insert Student data:
+db.Student.insertMany([
+  { _id:1,  name:'John',   age:30, city:'New York',     isActive:true  },
+  { _id:2,  name:'Jane',   age:25, city:'Los Angeles',  isActive:false },
+  { _id:3,  name:'Tom',    age:35, city:'Chicago',      isActive:true  },
+  { _id:4,  name:'Lucy',   age:28, city:'San Francisco',isActive:true  },
+  { _id:5,  name:'David',  age:40, city:'Miami',        isActive:false },
+  { _id:6,  name:'Eva',    age:23, city:'Boston',       isActive:true  },
+  { _id:7,  name:'Nick',   age:38, city:'Seattle',      isActive:false },
+  { _id:8,  name:'Sophia', age:27, city:'New York',     isActive:true  },
+  { _id:9,  name:'Liam',   age:32, city:'Los Angeles',  isActive:false },
+  { _id:10, name:'Olivia', age:29, city:'San Diego',    isActive:true  }
+])
+
+-- Q: 2. Display all documents
+db.Student.find()
+
+-- Q: 3. Documents where age is 30
+db.Student.find({ age: 30 })
+
+-- Q: 4. Documents where age > 25
+db.Student.find({ age: { $gt: 25 } })
+
+-- Q: 5. name='John' AND age=30
+db.Student.find({ name: 'John', age: 30 })
+
+-- Q: 6. age not equal to 25
+db.Student.find({ age: { $ne: 25 } })
+
+-- Q: 7. age = 25 OR 30 OR 35 (using $or and $in)
+-- Using $or:
+db.Student.find({ $or: [{ age:25 }, { age:30 }, { age:35 }] })
+-- Using $in:
+db.Student.find({ age: { $in: [25, 30, 35] } })
+
+-- Q: 8. name='John' OR age=30
+db.Student.find({ $or: [{ name: 'John' }, { age: 30 }] })
+
+-- Q: 9. name='John' AND city='New York'
+db.Student.find({ name: 'John', city: 'New York' })
+
+-- Q: 10. Show only name and age for name='John' and city='New York'
+db.Student.find({ name:'John', city:'New York' }, { name:1, age:1, _id:0 })
+
+PART C
+-- Q: 1. Age between 25 and 35, sorted by age ascending
+db.Student.find({ age: { $gte:25, $lte:35 } }).sort({ age: 1 })
+
+-- Q: 2. Sort by name ascending then age descending
+db.Student.find().sort({ name:1, age:-1 })
+
+-- Q: 3. First five documents
+db.Student.find().limit(5)
+
+-- Q: 4. 4th and 5th documents (skip 3, limit 2)
+db.Student.find().skip(3).limit(2)
+
+-- Q: 5. Name of oldest student (sort age desc, limit 1)
+db.Student.find({}, { name:1, age:1, _id:0 }).sort({ age: -1 }).limit(1)
+
+-- Q: 6. Skip first 2 documents
+db.Student.find().skip(2)
+
+
+LAB 21 – update, delete, rename, createCollection (Capped)
+
+PART A – Use Student collection from Lab 20
+-- Q: 1. Update age of John to 31
+db.Student.updateOne({ name:'John' }, { $set: { age: 31 } })
+
+-- Q: 2. Update city of all 'New York' students to 'New Jersey'
+db.Student.updateMany({ city:'New York' }, { $set: { city:'New Jersey' } })
+
+-- Q: 3. Set isActive=false for students older than 35
+db.Student.updateMany({ age: { $gt:35 } }, { $set: { isActive: false } })
+
+-- Q: 4. Increment age of all students by 1
+db.Student.updateMany({}, { $inc: { age: 1 } })
+
+-- Q: 5. Set city of 'Eva' to 'Cambridge'
+db.Student.updateOne({ name:'Eva' }, { $set: { city:'Cambridge' } })
+
+-- Q: 6. Update Sophia's isActive to false
+db.Student.updateOne({ name:'Sophia' }, { $set: { isActive: false } })
+
+-- Q: 7. Update city of students aged below 30 to 'San Diego'
+db.Student.updateMany({ age: { $lt:30 } }, { $set: { city:'San Diego' } })
+
+-- Q: 8. Rename 'age' field to 'years' for all documents
+db.Student.updateMany({}, { $rename: { age:'years' } })
+
+-- Q: 9. Update Nick to make him active
+db.Student.updateOne({ name:'Nick' }, { $set: { isActive: true } })
+
+-- Q: 10. Add new field 'country' = 'USA' to all documents
+db.Student.updateMany({}, { $set: { country:'USA' } })
+
+-- Q: 11. Update David's city to 'Orlando'
+db.Student.updateOne({ name:'David' }, { $set: { city:'Orlando' } })
+
+-- Q: 12. Multiply age of all students by 2 (use $mul)
+db.Student.updateMany({}, { $mul: { age: 2 } })
+
+-- Q: 13. Remove city field for Tom
+db.Student.updateOne({ name:'Tom' }, { $unset: { city:'' } })
+
+-- Q: 14. Add premiumUser=true for users older than 30
+db.Student.updateMany({ age: { $gt:30 } }, { $set: { premiumUser: true } })
+
+-- Q: 15. Set isActive=true for Jane
+db.Student.updateOne({ name:'Jane' }, { $set: { isActive: true } })
+
+-- Q: 16. Update isActive of Lucy to false
+db.Student.updateOne({ name:'Lucy' }, { $set: { isActive: false } })
+
+-- Q: 17. Delete document of Nick
+db.Student.deleteOne({ name:'Nick' })
+
+-- Q: 18. Delete all inactive students
+db.Student.deleteMany({ isActive: false })
+
+-- Q: 19. Delete all students in New York
+db.Student.deleteMany({ city:'New York' })
+
+-- Q: 20. Delete all students aged above 35
+db.Student.deleteMany({ age: { $gt:35 } })
+
+-- Q: 21. Delete student named Olivia
+db.Student.deleteOne({ name:'Olivia' })
+
+-- Q: 22. Delete all students aged below 25
+db.Student.deleteMany({ age: { $lt:25 } })
+
+-- Q: 23. Delete first student whose isActive=true
+db.Student.deleteOne({ isActive: true })
+
+-- Q: 24. Delete all students from Los Angeles
+db.Student.deleteMany({ city:'Los Angeles' })
+
+-- Q: 25. Delete all students who have city field missing
+db.Student.deleteMany({ city: { $exists: false } })
+
+-- Q: 26. Rename 'city' to 'location' for all documents
+db.Student.updateMany({}, { $rename: { city:'location' } })
+
+-- Q: 27. Rename 'name' to 'FullName' for John
+db.Student.updateOne({ name:'John' }, { $rename: { name:'FullName' } })
+
+-- Q: 28. Rename 'isActive' to 'status' for all
+db.Student.updateMany({}, { $rename: { isActive:'status' } })
+
+-- Q: 29. Rename 'age' to 'yearsOld' for San Francisco students only
+db.Student.updateMany({ city:'San Francisco' }, { $rename: { age:'yearsOld' } })
+
+-- Q: 30. Create Capped Collection 'Employee' (max 5 docs, validator)
+db.createCollection('Employee', {
+  capped: true,
+  size: 1048576,
+  max: 100,
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['Ecode', 'Ename'],
+      properties: {
+        Ecode: { bsonType: 'int',    description: 'Required int'    },
+        Ename: { bsonType: 'string', description: 'Required string' },
+        Age:   { bsonType: 'int'    },
+        City:  { bsonType: 'string' }
+      }
+    }
+  }
+})
+
+db.Employee.insertMany([
+  { Ecode: NumberInt(1), Ename: 'John' },
+  { Ecode: NumberInt(2), Ename: 'Jane', Age: NumberInt(25), City: 'Los Angeles' },
+  { Ecode: NumberInt(3), Ename: 'Tom',  Age: NumberInt(35) },
+  { Ecode: NumberInt(4), Ename: 'Lucy', Age: NumberInt(28), City: 'San Francisco', isActive: true }
+  -- Note: { Ename: 'Dino' } will FAIL validation because Ecode is required
+])
+
+PART B – Student_data Collection
+db.Student_data.insertMany([
+  { ROLLNO:101, SNAME:'Vina',   DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Female', CITY:'Rajkot'    },
+  { ROLLNO:102, SNAME:'Krisha', DEPARTMENT:'EC',         FEES:8000,  SEM:5, GENDER:'Female', CITY:'Ahmedabad' },
+  { ROLLNO:103, SNAME:'Priti',  DEPARTMENT:'Civil',      FEES:12000, SEM:7, GENDER:'Female', CITY:'Baroda'    },
+  { ROLLNO:104, SNAME:'Mitul',  DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Male',   CITY:'Rajkot'    },
+  { ROLLNO:105, SNAME:'Keshav', DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Male',   CITY:'Jamnagar'  },
+  { ROLLNO:106, SNAME:'Zarna',  DEPARTMENT:'Civil',      FEES:12000, SEM:5, GENDER:'Female', CITY:'Ahmedabad' },
+  { ROLLNO:107, SNAME:'Nima',   DEPARTMENT:'EE',         FEES:9000,  SEM:5, GENDER:'Female', CITY:'Rajkot'    },
+  { ROLLNO:108, SNAME:'Dhruv',  DEPARTMENT:'Mechanical', FEES:10000, SEM:5, GENDER:'Male',   CITY:'Rajkot'    },
+  { ROLLNO:109, SNAME:'Krish',  DEPARTMENT:'Mechanical', FEES:10000, SEM:7, GENDER:'Male',   CITY:'Baroda'    },
+  { ROLLNO:110, SNAME:'Zeel',   DEPARTMENT:'EE',         FEES:9000,  SEM:3, GENDER:'Female', CITY:'Jamnagar'  }
+])
+
+-- Q: 1. Display Female students in Rajkot city
+db.Student_data.find({ GENDER:'Female', CITY:'Rajkot' })
+
+-- Q: 2. Students NOT in 3rd sem
+db.Student_data.find({ SEM: { $ne: 3 } })
+
+-- Q: 3. Students from Jamnagar or Baroda (using $in)
+db.Student_data.find({ CITY: { $in: ['Jamnagar','Baroda'] } })
+
+-- Q: 4. First 2 student names from Baroda
+db.Student_data.find({ CITY:'Baroda' }, { SNAME:1, _id:0 }).limit(2)
+
+-- Q: 5. Male students in 3rd sem
+db.Student_data.find({ GENDER:'Male', SEM:3 })
+
+-- Q: 6. SNAME, CITY, FEES where ROLLNO < 105
+db.Student_data.find({ ROLLNO: { $lt:105 } }, { SNAME:1, CITY:1, FEES:1, _id:0 })
+
+-- Q: 7. Update City from Jamnagar+CE to Surat
+db.Student_data.updateMany({ CITY:'Jamnagar', DEPARTMENT:'CE' }, { $set: { CITY:'Surat' } })
+
+-- Q: 8. Increase Fees by 500 where Gender is NOT Female
+db.Student_data.updateMany({ GENDER: { $not: { $eq:'Female' } } }, { $inc: { FEES: 500 } })
+
+-- Q: 9. Set Department of EE students in Sem 3 to 'Electrical'
+db.Student_data.updateMany({ DEPARTMENT:'EE', SEM:3 }, { $set: { DEPARTMENT:'Electrical' } })
+
+-- Q: 10. Update Fees of male students in Rajkot (increase by 1000)
+db.Student_data.updateMany({ CITY:'Rajkot', GENDER:'Male' }, { $inc: { FEES: 1000 } })
+
+-- Q: 11. Change City to Vadodara for Sem 5 students with Fees < 10000
+db.Student_data.updateMany({ SEM:5, FEES:{ $lt:10000 } }, { $set: { CITY:'Vadodara' } })
+
+-- Q: 12. Delete all students from Ahmedabad or Gender=Male
+db.Student_data.deleteMany({ $or: [{ CITY:'Ahmedabad' }, { GENDER:'Male' }] })
+
+-- Q: 13. Delete students whose ROLLNO is NOT in [101,105,110]
+db.Student_data.deleteMany({ ROLLNO: { $nin: [101,105,110] } })
+
+-- Q: 14. Delete Civil students in Sem 5 or Sem 7
+db.Student_data.deleteMany({ DEPARTMENT:'Civil', SEM: { $in:[5,7] } })
+
+-- Q: 15. Delete students NOT from Rajkot, Baroda, or Jamnagar
+db.Student_data.deleteMany({ CITY: { $nin:['Rajkot','Baroda','Jamnagar'] } })
+
+-- Q: 16. Delete students with ROLLNO between 105 and 108
+db.Student_data.deleteMany({ ROLLNO: { $gte:105, $lte:108 } })
+
+-- Q: 17. Rename City field to LOCATION for all
+db.Student_data.updateMany({}, { $rename: { CITY:'LOCATION' } })
+
+-- Q: 18. Rename Department to Branch where Fees < 10000
+db.Student_data.updateMany({ FEES: { $lt:10000 } }, { $rename: { DEPARTMENT:'Branch' } })
+
+-- Q: 19. Rename Sname to Fullname for ROLLNO in [106,107,108]
+db.Student_data.updateMany({ ROLLNO: { $in:[106,107,108] } }, { $rename: { SNAME:'Fullname' } })
+
+-- Q: 20. Rename Fees to Tuition_Fees where Fees > 9000
+db.Student_data.updateMany({ FEES: { $gt:9000 } }, { $rename: { FEES:'Tuition_Fees' } })
+
+-- Q: 21. Rename Department to Major where Fees<15000 and Gender=Female
+db.Student_data.updateMany({ FEES:{ $lt:15000 }, GENDER:'Female' }, { $rename: { DEPARTMENT:'Major' } })
+
+-- Q: 22. Rename City to Hometown for SEM=3 and DEPARTMENT != Mechanical
+db.Student_data.updateMany({ SEM:3, DEPARTMENT:{ $ne:'Mechanical' } }, { $rename: { CITY:'Hometown' } })
+
+PART C – Capped Collection 'logs'
+-- Q: 1-4. Create capped 'logs' collection and insert 12 entries
+db.createCollection('logs', { capped: true, size: 102400, max: 10 })
+
+db.logs.insertMany([
+  { message:'System started',    level:'info',    timestamp: new Date() },
+  { message:'Disk space low',    level:'warning', timestamp: new Date() },
+  { message:'User login',        level:'info',    timestamp: new Date() },
+  { message:'System reboot',     level:'info',    timestamp: new Date() },
+  { message:'Error in module',   level:'error',   timestamp: new Date() },
+  { message:'Memory usage high', level:'warning', timestamp: new Date() },
+  { message:'User logout',       level:'info',    timestamp: new Date() },
+  { message:'File uploaded',     level:'info',    timestamp: new Date() },
+  { message:'Network error',     level:'error',   timestamp: new Date() },
+  { message:'Backup completed',  level:'info',    timestamp: new Date() },
+  { message:'Database error',    level:'error',   timestamp: new Date() },
+  { message:'Service started',   level:'info',    timestamp: new Date() }
+])
+-- After inserting 12, only last 10 remain (capped at max:10)
+
+db.logs.find()  -- Verify only 10 remain
+
+-- Insert 5 more (oldest auto-removed):
+db.logs.insertMany([
+  { message:'New log entry 1', level:'info',    timestamp: new Date() },
+  { message:'New log entry 2', level:'info',    timestamp: new Date() },
+  { message:'New log entry 3', level:'info',    timestamp: new Date() },
+  { message:'New log entry 4', level:'warning', timestamp: new Date() },
+  { message:'New log entry 5', level:'error',   timestamp: new Date() }
+])
+
+
+LAB 22 – Regex Queries
+
+SETUP – Employee Collection
+db.Employee.insertMany([
+  { EID:1,  ENAME:'Nick',    GENDER:'Male',   JOININGDATE:'01-JAN-13', SALARY:4000, CITY:'London'   },
+  { EID:2,  ENAME:'Julian',  GENDER:'Female', JOININGDATE:'01-OCT-14', SALARY:3000, CITY:'New York'  },
+  { EID:3,  ENAME:'Roy',     GENDER:'Male',   JOININGDATE:'01-JUN-16', SALARY:3500, CITY:'London'   },
+  { EID:4,  ENAME:'Tom',     GENDER:'Male',   JOININGDATE:null,        SALARY:4500, CITY:'London'   },
+  { EID:5,  ENAME:'Jerry',   GENDER:'Male',   JOININGDATE:'01-FEB-13', SALARY:2800, CITY:'Sydney'   },
+  { EID:6,  ENAME:'Philip',  GENDER:'Male',   JOININGDATE:'01-JAN-15', SALARY:7000, CITY:'New York'  },
+  { EID:7,  ENAME:'Sara',    GENDER:'Female', JOININGDATE:'01-AUG-17', SALARY:4800, CITY:'Sydney'   },
+  { EID:8,  ENAME:'Emily',   GENDER:'Female', JOININGDATE:'01-JAN-15', SALARY:5500, CITY:'New York'  },
+  { EID:9,  ENAME:'Michael', GENDER:'Male',   JOININGDATE:null,        SALARY:6500, CITY:'London'   },
+  { EID:10, ENAME:'John',    GENDER:'Male',   JOININGDATE:'01-JAN-15', SALARY:8800, CITY:'London'   }
+])
+
+PART A – Employee Regex Queries
+-- Q: 1. Name starts with E
+db.Employee.find({ ENAME: /^E/ })
+
+-- Q: 2. Name ends with n
+db.Employee.find({ ENAME: /n$/i })
+
+-- Q: 3. Name starts with S or M
+db.Employee.find({ ENAME: /^[SM]/ })
+
+-- Q: 4. City starts with A to M
+db.Employee.find({ CITY: /^[A-M]/i })
+
+-- Q: 5. City name ends in 'ney'
+db.Employee.find({ CITY: /ney$/i })
+
+-- Q: 6. Name contains 'n' (case-insensitive)
+db.Employee.find({ ENAME: /n/i })
+
+-- Q: 7. Name starts with E and has exactly 5 characters
+db.Employee.find({ ENAME: /^E.{4}$/ })
+
+-- Q: 8. Name starts with S and ends with a
+db.Employee.find({ ENAME: /^S.*a$/i })
+
+-- Q: 9. Show EID, ENAME, CITY, SALARY where name starts with 'Phi'
+db.Employee.find({ ENAME: /^Phi/ }, { EID:1, ENAME:1, CITY:1, SALARY:1, _id:0 })
+
+-- Q: 10. ENAME, JOININGDATE, CITY where city contains 'dne'
+db.Employee.find({ CITY: /dne/ }, { ENAME:1, JOININGDATE:1, CITY:1, _id:0 })
+
+-- Q: 11. Not from London or Sydney
+db.Employee.find({ CITY: { $not: /^(London|Sydney)$/ } }, { ENAME:1, JOININGDATE:1, CITY:1, _id:0 })
+
+-- Q: 12. Names start with J
+db.Employee.find({ ENAME: /^J/ })
+
+-- Q: 13. Names end with y
+db.Employee.find({ ENAME: /y$/i })
+
+-- Q: 14. Names contain letter 'a'
+db.Employee.find({ ENAME: /a/i })
+
+-- Q: 15. Names contain 'a' or 'e'
+db.Employee.find({ ENAME: /[ae]/i })
+
+-- Q: 16. Name starts with J and ends with n
+db.Employee.find({ ENAME: /^J.*n$/i })
+
+-- Q: 17. City starts with 'New'
+db.Employee.find({ CITY: /^New/ })
+
+-- Q: 18. City does NOT start with 'L'
+db.Employee.find({ CITY: /^[^L]/i })
+
+-- Q: 19. City contains word 'York'
+db.Employee.find({ CITY: /York/ })
+
+-- Q: 20. Names have two consecutive vowels
+db.Employee.find({ ENAME: /[aeiou]{2}/i })
+
+-- Q: 21. Names have 3 or more letters
+db.Employee.find({ ENAME: /^.{3,}$/ })
+
+-- Q: 22. Names have exactly 4 letters
+db.Employee.find({ ENAME: /^.{4}$/ })
+
+-- Q: 23. Names start with S or M
+db.Employee.find({ ENAME: /^[SM]/ })
+
+-- Q: 24. Names contain 'il' anywhere
+db.Employee.find({ ENAME: /il/i })
+
+-- Q: 25. Names do NOT contain 'a'
+db.Employee.find({ ENAME: /^[^a]*$/i })
+
+-- Q: 26. Names contain any digit
+db.Employee.find({ ENAME: /[0-9]/ })
+
+-- Q: 27. Names contain exactly one vowel
+db.Employee.find({ ENAME: /^[^aeiouAEIOU]*[aeiouAEIOU][^aeiouAEIOU]*$/ })
+
+-- Q: 28. Names start with uppercase letter followed by lowercase letter
+db.Employee.find({ ENAME: /^[A-Z][a-z]/ })
+
+PART B – Student Regex (same Student_data from Lab 21)
+-- Q: 1. SNAME starts with K
+db.Student.find({ SNAME: /^K/ })
+
+-- Q: 2. SNAME starts with Z or D
+db.Student.find({ SNAME: /^[ZD]/ })
+
+-- Q: 3. City starts with A to R
+db.Student.find({ CITY: /^[A-R]/i })
+
+-- Q: 4. Name starts with P and ends with i
+db.Student.find({ SNAME: /^P.*i$/i })
+
+-- Q: 5. Department starts with C
+db.Student.find({ DEPARTMENT: /^C/ })
+
+-- Q: 6. City contains 'med', show name, sem, fees, department
+db.Student.find({ CITY: /med/i }, { SNAME:1, SEM:1, FEES:1, DEPARTMENT:1, _id:0 })
+
+-- Q: 7. NOT from Rajkot or Baroda
+db.Student.find({ CITY: { $not: /^(Rajkot|Baroda)$/i } }, { SNAME:1, SEM:1, FEES:1, DEPARTMENT:1, _id:0 })
+
+-- Q: 8. Names start with K followed by any character
+db.Student.find({ SNAME: /^K./ })
+
+-- Q: 9. Names end with 'a'
+db.Student.find({ SNAME: /a$/i })
+
+-- Q: 10. Names contain 'ri' (case-insensitive)
+db.Student.find({ SNAME: /ri/i })
+
+PART C – Advanced Regex
+-- Q: 1. Names start with vowel
+db.Student.find({ SNAME: /^[AEIOUaeiou]/ })
+
+-- Q: 2. City ends with 'pur' or 'bad'
+db.Student.find({ CITY: /(pur|bad)$/i })
+
+-- Q: 3. FEES starts with '1'
+db.Student.find({ $where: 'this.FEES.toString().startsWith("1")' })
+
+-- Q: 4. SNAME starts with K or V
+db.Student.find({ SNAME: /^[KV]/ })
+
+-- Q: 5. City contains exactly 5 characters
+db.Student.find({ CITY: /^.{5}$/ })
+
+-- Q: 6. Names do NOT contain letter 'e'
+db.Student.find({ SNAME: /^[^eE]*$/ })
+
+-- Q: 7. City starts with 'Ra' and ends with 'ot'
+db.Student.find({ CITY: /^Ra.*ot$/ })
+
+-- Q: 8. Names contain exactly one vowel
+db.Student.find({ SNAME: /^[^aeiouAEIOU]*[aeiouAEIOU][^aeiouAEIOU]*$/ })
+
+-- Q: 9. Names start and end with the same letter
+db.Student.find({ $where: 'this.SNAME[0].toLowerCase() === this.SNAME[this.SNAME.length-1].toLowerCase()' })
+
+-- Q: 10. Department starts with C or E
+db.Student.find({ DEPARTMENT: /^[CE]/ })
+
+-- Q: 11. SNAME has exactly 5 characters
+db.Student.find({ SNAME: /^.{5}$/ })
+
+-- Q: 12. Female students, City starts with A
+db.Student.find({ GENDER:'Female', CITY: /^A/i })
+
+
+LAB 23 – Regex on Customer and Company Collections
+
+SETUP – Customer Collection
+db.Customer.insertMany([
+  { CID:1,  CNAME:'Rajesh',  EMAIL:'rajesh@gmail.com',   GENDER:'Male',   CITY:'Surat',     BALANCE:5000  },
+  { CID:2,  CNAME:'Meena',   EMAIL:'meena@yahoo.com',    GENDER:'Female', CITY:'Ahmedabad', BALANCE:8000  },
+  { CID:3,  CNAME:'Anil',    EMAIL:'anil@outlook.com',   GENDER:'Male',   CITY:'Vadodara',  BALANCE:6000  },
+  { CID:4,  CNAME:'Sneha',   EMAIL:'sneha@hotmail.com',  GENDER:'Female', CITY:'Rajkot',    BALANCE:50000 },
+  { CID:5,  CNAME:'Nikhil',  EMAIL:'nikhil@gmail.com',   GENDER:'Male',   CITY:'Surat',     BALANCE:4000  },
+  { CID:6,  CNAME:'Rachna',  EMAIL:'rachna@yahoo.com',   GENDER:'Female', CITY:'Baroda',    BALANCE:9000  },
+  { CID:7,  CNAME:'Gaurav',  EMAIL:'gaurav@outlook.com', GENDER:'Male',   CITY:'Jamnagar',  BALANCE:10000 },
+  { CID:8,  CNAME:'Tanya',   EMAIL:'tanya@hotmail.com',  GENDER:'Female', CITY:'Mehsana',   BALANCE:5500  },
+  { CID:9,  CNAME:'Pushti',  EMAIL:'pushti@gmail.com',   GENDER:'Female', CITY:'Rajkot',    BALANCE:50000 },
+  { CID:10, CNAME:'Avni',    EMAIL:'avni@yahoo.com',     GENDER:'Female', CITY:'Morbi',     BALANCE:10000 }
+])
+
+PART A
+-- Q: 1. City does NOT start with S
+db.Customer.find({ CITY: /^[^S]/i })
+
+-- Q: 2. City contains word 'bad'
+db.Customer.find({ CITY: /bad/i })
+
+-- Q: 3. CNAME has two consecutive vowels
+db.Customer.find({ CNAME: /[aeiou]{2}/i })
+
+-- Q: 4. CNAME has 3 or more letters
+db.Customer.find({ CNAME: /^.{3,}$/ })
+
+-- Q: 5. EMAIL ends with 'gmail.com'
+db.Customer.find({ EMAIL: /gmail\.com$/ })
+
+-- Q: 6. EMAIL contains 'outlook'
+db.Customer.find({ EMAIL: /outlook/ })
+
+-- Q: 7. Name starts with uppercase letter
+db.Customer.find({ CNAME: /^[A-Z]/ })
+
+-- Q: 8. Not from Surat or Rajkot
+db.Customer.find({ CITY: { $not: /^(Surat|Rajkot)$/i } })
+
+-- Q: 9. EMAIL starts with 't' and ends with '.com'
+db.Customer.find({ EMAIL: /^t.*\.com$/ })
+
+-- Q: 10. CNAME does NOT contain 'a' or 'e'
+db.Customer.find({ CNAME: /^[^aeAE]*$/ })
+
+-- Q: 11. EMAIL contains exactly one digit
+db.Customer.find({ EMAIL: /^[^0-9]*[0-9][^0-9]*$/ })
+
+SETUP – Company Collection
+db.Company.insertMany([
+  { CID:1,  CNAME:'TechNova',   EMAIL:'info@technova.com',   INDUSTRY:'IT',            CITY:'Bangalore', EMPLOYEES:250 },
+  { CID:2,  CNAME:'GreenWorld', EMAIL:'support@greenw.com',  INDUSTRY:'Agriculture',   CITY:'Ahmedabad', EMPLOYEES:120 },
+  { CID:3,  CNAME:'SkyHigh Ltd',EMAIL:'contact@skyhigh.in',  INDUSTRY:'Aviation',      CITY:'Mumbai',    EMPLOYEES:300 },
+  { CID:4,  CNAME:'UrbanBuild', EMAIL:'info@urbanbuild.org', INDUSTRY:'Construction',  CITY:'Surat',     EMPLOYEES:180 },
+  { CID:5,  CNAME:'MediCore',   EMAIL:'hello@medicore.net',  INDUSTRY:'Healthcare',    CITY:'Pune',      EMPLOYEES:90  },
+  { CID:6,  CNAME:'FinEdge',    EMAIL:'info@finedge.co',     INDUSTRY:'Finance',       CITY:'Kolkata',   EMPLOYEES:200 },
+  { CID:7,  CNAME:'AutoSphere', EMAIL:'sales@autos.com',     INDUSTRY:'Automotive',    CITY:'Chennai',   EMPLOYEES:400 },
+  { CID:8,  CNAME:'EduQuest',   EMAIL:'info@eduquest.edu',   INDUSTRY:'Education',     CITY:'Rajkot',    EMPLOYEES:75  },
+  { CID:9,  CNAME:'FoodiesHub', EMAIL:'contact@foodies.org', INDUSTRY:'Food',          CITY:'Baroda',    EMPLOYEES:60  },
+  { CID:10, CNAME:'BioPure',    EMAIL:'info@biopure.bio',    INDUSTRY:'Pharma',        CITY:'Hyderabad', EMPLOYEES:150 }
+])
+
+PART B – Company Regex
+-- Q: 1. Name starts with B or F
+db.Company.find({ CNAME: /^[BF]/ })
+
+-- Q: 2. Cities ending with 'pur'
+db.Company.find({ CITY: /pur$/i })
+
+-- Q: 3. Name contains 'Core', Email starts with 'info'
+db.Company.find({ CNAME: /Core/, EMAIL: /^info/ })
+
+-- Q: 4. Industry starts with capital letter + 4 lowercase letters
+db.Company.find({ INDUSTRY: /^[A-Z][a-z]{4}/ })
+
+-- Q: 5. CNAME ends with a capital letter
+db.Company.find({ CNAME: /[A-Z]$/ })
+
+-- Q: 6. City starts with letter A to K
+db.Company.find({ CITY: /^[A-K]/i })
+
+-- Q: 7. Industry name has more than 8 letters
+db.Company.find({ INDUSTRY: /^.{9,}$/ })
+
+-- Q: 8. EMAIL has a number in it
+db.Company.find({ EMAIL: /[0-9]/ })
+
+-- Q: 9. CNAME starts and ends with vowels
+db.Company.find({ CNAME: /^[AEIOUaeiou].*[AEIOUaeiou]$/ })
+
+-- Q: 10. City names contain the same letter twice in a row
+db.Company.find({ CITY: /([a-zA-Z])\1/i })
+
+PART C – Advanced Company Regex
+-- Q: 1. Email starts with any two letters followed by digits
+db.Company.find({ EMAIL: /^[a-zA-Z]{2}[0-9]+/ })
+
+-- Q: 2. EMAIL includes underscore _
+db.Company.find({ EMAIL: /_/ })
+
+-- Q: 3. EMAIL domain starts with g or h
+db.Company.find({ EMAIL: /@[gh]/i })
+
+-- Q: 4. CNAME contains repeating pattern like 'ana'
+db.Company.find({ CNAME: /([a-z]{2,})\1/i })
+
+-- Q: 5. CNAME contains at least 3 vowels
+db.Company.find({ $where: '(this.CNAME.match(/[aeiou]/gi)||[]).length >= 3' })
+
+-- Q: 6. EMAIL domain ends .com and starts with out
+db.Company.find({ EMAIL: /@out.*\.com$/ })
+
+-- Q: 7. Industry does NOT contain vowels
+db.Company.find({ INDUSTRY: /^[^aeiouAEIOU]+$/ })
+
+-- Q: 8. CNAME has 2+ consecutive consonants
+db.Company.find({ CNAME: /[^aeiouAEIOU ]{2}/i })
+
+-- Q: 9. CNAME has alternating vowels and consonants (4+ chars)
+db.Company.find({ CNAME: /^([aeiou][^aeiou]){2}/i })
+
+
+LAB 24 – Aggregate Functions
+
+SETUP – Student Collection
+db.Student.insertMany([
+  { ROLLNO:101, SNAME:'Vina',   DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Female', CITY:'Rajkot'    },
+  { ROLLNO:102, SNAME:'Krisha', DEPARTMENT:'EC',         FEES:8000,  SEM:5, GENDER:'Female', CITY:'Ahmedabad' },
+  { ROLLNO:103, SNAME:'Priti',  DEPARTMENT:'Civil',      FEES:12000, SEM:7, GENDER:'Female', CITY:'Baroda'    },
+  { ROLLNO:104, SNAME:'Mitul',  DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Male',   CITY:'Rajkot'    },
+  { ROLLNO:105, SNAME:'Keshav', DEPARTMENT:'CE',         FEES:15000, SEM:3, GENDER:'Male',   CITY:'Jamnagar'  },
+  { ROLLNO:106, SNAME:'Zarna',  DEPARTMENT:'Civil',      FEES:12000, SEM:5, GENDER:'Female', CITY:'Ahmedabad' },
+  { ROLLNO:107, SNAME:'Nima',   DEPARTMENT:'EE',         FEES:9000,  SEM:5, GENDER:'Female', CITY:'Rajkot'    },
+  { ROLLNO:108, SNAME:'Dhruv',  DEPARTMENT:'Mechanical', FEES:10000, SEM:5, GENDER:'Male',   CITY:'Rajkot'    },
+  { ROLLNO:109, SNAME:'Krish',  DEPARTMENT:'Mechanical', FEES:10000, SEM:7, GENDER:'Male',   CITY:'Baroda'    },
+  { ROLLNO:110, SNAME:'Zeel',   DEPARTMENT:'EE',         FEES:9000,  SEM:3, GENDER:'Female', CITY:'Jamnagar'  }
+])
+
+PART A
+-- Q: 1. Distinct cities
+db.Student.distinct('CITY')
+
+-- Q: 2. City-wise count of students
+db.Student.aggregate([ { $group: { _id:'$CITY', count:{ $sum:1 } } } ])
+
+-- Q: 3. Sum of all fees
+db.Student.aggregate([ { $group: { _id:null, totalFees:{ $sum:'$FEES' } } } ])
+
+-- Q: 4. Average of fees
+db.Student.aggregate([ { $group: { _id:null, avgFees:{ $avg:'$FEES' } } } ])
+
+-- Q: 5. Maximum and minimum fees
+db.Student.aggregate([ { $group: { _id:null, maxFees:{ $max:'$FEES' }, minFees:{ $min:'$FEES' } } } ])
+
+-- Q: 6. City-wise total fees
+db.Student.aggregate([ { $group: { _id:'$CITY', totalFees:{ $sum:'$FEES' } } } ])
+
+-- Q: 7. Gender-wise maximum fees
+db.Student.aggregate([ { $group: { _id:'$GENDER', maxFees:{ $max:'$FEES' } } } ])
+
+-- Q: 8. City-wise maximum and minimum fees
+db.Student.aggregate([ { $group: { _id:'$CITY', maxFees:{ $max:'$FEES' }, minFees:{ $min:'$FEES' } } } ])
+
+-- Q: 11. Count male and female students per Department
+db.Student.aggregate([
+  { $group: { _id:{ dept:'$DEPARTMENT', gender:'$GENDER' }, count:{ $sum:1 } } }
+])
+
+-- Q: 12. Total fees per Department
+db.Student.aggregate([ { $group: { _id:'$DEPARTMENT', totalFees:{ $sum:'$FEES' } } } ])
+
+-- Q: 13. Minimum fees by gender per city
+db.Student.aggregate([
+  { $group: { _id:{ city:'$CITY', gender:'$GENDER' }, minFees:{ $min:'$FEES' } } }
+])
+
+-- Q: 14. Sort by FEES descending, top 5
+db.Student.aggregate([ { $sort: { FEES:-1 } }, { $limit: 5 } ])
+
+-- Q: 15. City-wise avg fees, only cities with more than 1 student
+db.Student.aggregate([
+  { $group: { _id:'$CITY', avgFees:{ $avg:'$FEES' }, count:{ $sum:1 } } },
+  { $match: { count: { $gt:1 } } }
+])
+
+-- Q: 16. Filter CE or Mechanical, calculate total fees
+db.Student.aggregate([
+  { $match: { DEPARTMENT: { $in:['CE','Mechanical'] } } },
+  { $group: { _id:null, totalFees:{ $sum:'$FEES' } } }
+])
+
+-- Q: 18. Rajkot students → group by dept → avg fees
+db.Student.aggregate([
+  { $match: { CITY:'Rajkot' } },
+  { $group: { _id:'$DEPARTMENT', avgFees:{ $avg:'$FEES' } } }
+])
+
+-- Q: 19. Group by Sem, total and avg fees, sort desc
+db.Student.aggregate([
+  { $group: { _id:'$SEM', total:{ $sum:'$FEES' }, avg:{ $avg:'$FEES' } } },
+  { $sort: { total:-1 } }
+])
+
+-- Q: 20. Top 3 cities with highest total fees
+db.Student.aggregate([
+  { $group: { _id:'$CITY', totalFees:{ $sum:'$FEES' } } },
+  { $sort: { totalFees:-1 } },
+  { $limit: 3 }
+])
+
+
+LAB 25 – Aggregate on Faculty Collection
+
+SETUP – Faculty Collection
+db.Faculty.insertMany([
+  { FID:201, FNAME:'Aarti',   DEPARTMENT:'CE',         SALARY:50000, EXPERIENCE:5, GENDER:'Female', CITY:'Rajkot'    },
+  { FID:202, FNAME:'Bhavesh', DEPARTMENT:'EC',         SALARY:45000, EXPERIENCE:7, GENDER:'Male',   CITY:'Ahmedabad' },
+  { FID:203, FNAME:'Chitra',  DEPARTMENT:'Civil',      SALARY:40000, EXPERIENCE:6, GENDER:'Female', CITY:'Baroda'    },
+  { FID:204, FNAME:'Deepak',  DEPARTMENT:'CE',         SALARY:50000, EXPERIENCE:8, GENDER:'Male',   CITY:'Rajkot'    },
+  { FID:205, FNAME:'Ekta',    DEPARTMENT:'CE',         SALARY:52000, EXPERIENCE:4, GENDER:'Female', CITY:'Jamnagar'  },
+  { FID:206, FNAME:'Faizan',  DEPARTMENT:'Civil',      SALARY:42000, EXPERIENCE:7, GENDER:'Male',   CITY:'Ahmedabad' },
+  { FID:207, FNAME:'Gita',    DEPARTMENT:'EE',         SALARY:46000, EXPERIENCE:3, GENDER:'Female', CITY:'Rajkot'    },
+  { FID:208, FNAME:'Harsh',   DEPARTMENT:'Mechanical', SALARY:48000, EXPERIENCE:4, GENDER:'Male',   CITY:'Rajkot'    },
+  { FID:209, FNAME:'Dhruv',   DEPARTMENT:'EC',         SALARY:45000, EXPERIENCE:5, GENDER:'Male',   CITY:'Morbi'     },
+  { FID:210, FNAME:'Tina',    DEPARTMENT:'EE',         SALARY:47000, EXPERIENCE:3, GENDER:'Female', CITY:'Surat'     }
+])
+
+PART A
+-- Q: 1. Distinct departments
+db.Faculty.distinct('DEPARTMENT')
+
+-- Q: 2. Count of faculty per department
+db.Faculty.aggregate([ { $group: { _id:'$DEPARTMENT', count:{ $sum:1 } } } ])
+
+-- Q: 3. Average salary per department (without dept name in output)
+db.Faculty.aggregate([ { $group: { _id:'$DEPARTMENT', avgSalary:{ $avg:'$SALARY' } } } ])
+
+-- Q: 4. Faculty with salary between 45000 and 50000
+db.Faculty.find({ SALARY: { $gte:45000, $lte:50000 } })
+
+-- Q: 5. Departments with more than 2 faculty
+db.Faculty.aggregate([
+  { $group: { _id:'$DEPARTMENT', count:{ $sum:1 } } },
+  { $match: { count: { $gt:2 } } }
+])
+
+-- Q: 6. Total salary per dept where city=Rajkot and salary>45000
+db.Faculty.aggregate([
+  { $match: { CITY:'Rajkot', SALARY:{ $gt:45000 } } },
+  { $group: { _id:'$DEPARTMENT', totalSalary:{ $sum:'$SALARY' } } }
+])
+
+-- Q: 7. CE or EC faculty with experience > 5 years
+db.Faculty.find({ DEPARTMENT:{ $in:['CE','EC'] }, EXPERIENCE:{ $gt:5 } })
+
+-- Q: 8. Department + faculty name with highest experience
+db.Faculty.aggregate([
+  { $sort: { EXPERIENCE:-1 } },
+  { $limit: 1 },
+  { $project: { FNAME:1, DEPARTMENT:1, EXPERIENCE:1, _id:0 } }
+])
+
+-- Q: 9. Second lowest salary
+db.Faculty.aggregate([
+  { $sort: { SALARY:1 } },
+  { $skip: 1 },
+  { $limit: 1 }
+])
+
+-- Q: 10. City-wise average experience of male faculty
+db.Faculty.aggregate([
+  { $match: { GENDER:'Male' } },
+  { $group: { _id:'$CITY', avgExp:{ $avg:'$EXPERIENCE' } } }
+])
+
+-- Q: 11. Sort by experience descending
+db.Faculty.find().sort({ EXPERIENCE:-1 })
+
+-- Q: 12. Department-wise average experience
+db.Faculty.aggregate([ { $group: { _id:'$DEPARTMENT', avgExp:{ $avg:'$EXPERIENCE' } } } ])
+
+-- Q: 13. Top 3 highest paid faculty
+db.Faculty.aggregate([ { $sort: { SALARY:-1 } }, { $limit:3 } ])
+
+-- Q: 14. Total salary of Rajkot faculty
+db.Faculty.aggregate([
+  { $match: { CITY:'Rajkot' } },
+  { $group: { _id:null, totalSalary:{ $sum:'$SALARY' } } }
+])
+
+-- Q: 15. Count of faculty per gender per city
+db.Faculty.aggregate([
+  { $group: { _id:{ city:'$CITY', gender:'$GENDER' }, count:{ $sum:1 } } }
+])
+
+PART B
+-- Q: 1. Second highest experience faculty in Rajkot
+db.Faculty.aggregate([
+  { $match: { CITY:'Rajkot' } },
+  { $sort: { EXPERIENCE:-1 } },
+  { $skip: 1 },
+  { $limit: 1 }
+])
+
+-- Q: 2. Experience > 6 and Salary > 45000
+db.Faculty.find({ EXPERIENCE:{ $gt:6 }, SALARY:{ $gt:45000 } })
+
+-- Q: 5. City-wise total and average salary
+db.Faculty.aggregate([
+  { $group: { _id:'$CITY', total:{ $sum:'$SALARY' }, avg:{ $avg:'$SALARY' } } }
+])
+
+-- Q: 6. Highest paid faculty per department
+db.Faculty.aggregate([
+  { $sort: { SALARY:-1 } },
+  { $group: { _id:'$DEPARTMENT', topFaculty:{ $first:'$FNAME' }, topSalary:{ $first:'$SALARY' } } }
+])
+
+-- Q: 8. Department with highest average salary
+db.Faculty.aggregate([
+  { $group: { _id:'$DEPARTMENT', avgSal:{ $avg:'$SALARY' } } },
+  { $sort: { avgSal:-1 } },
+  { $limit: 1 }
+])
+
+-- Q: 10. Cities where avg experience > 6 years
+db.Faculty.aggregate([
+  { $group: { _id:'$CITY', avgExp:{ $avg:'$EXPERIENCE' } } },
+  { $match: { avgExp:{ $gt:6 } } }
+])
+
+PART C
+-- Q: 1. Second highest paid faculty
+db.Faculty.aggregate([
+  { $sort: { SALARY:-1 } },
+  { $skip: 1 },
+  { $limit: 1 }
+])
+
+-- Q: 4. Salary comparison by gender
+db.Faculty.aggregate([
+  { $group: { _id:'$GENDER', avgSalary:{ $avg:'$SALARY' }, totalSalary:{ $sum:'$SALARY' } } }
+])
+
+-- Q: 5. Top 3 cities with highest average salary
+db.Faculty.aggregate([
+  { $group: { _id:'$CITY', avgSal:{ $avg:'$SALARY' } } },
+  { $sort: { avgSal:-1 } },
+  { $limit: 3 }
+])
+
+
+LAB 26 – Aggregate on Shopping_Order
+
+SETUP – Shopping_Order Collection
+db.Shopping_Order.insertMany([
+  { OID:101, CUSTOMER:'Riya Shah',   PRODUCT:'iPhone 13',        CATEGORY:'Electronics', PRICE:70000, QTY:1, Total:70000,  Date:new Date('2025-05-10'), STATUS:'Delivered' },
+  { OID:102, CUSTOMER:'Amit Patel',  PRODUCT:'T-shirt',          CATEGORY:'Fashion',     PRICE:500,   QTY:3, Total:1500,   Date:new Date('2025-05-12'), STATUS:'Shipped'   },
+  { OID:103, CUSTOMER:'Nidhi Desai', PRODUCT:'Microwave',        CATEGORY:'Appliances',  PRICE:9500,  QTY:1, Total:9500,   Date:new Date('2025-05-15'), STATUS:'Cancelled' },
+  { OID:104, CUSTOMER:'Raj Mehta',   PRODUCT:'Running Shoes',    CATEGORY:'Footwear',    PRICE:3000,  QTY:2, Total:6000,   Date:new Date('2025-05-16'), STATUS:'Delivered' },
+  { OID:105, CUSTOMER:'Zarna Modi',  PRODUCT:'Book Set',         CATEGORY:'Stationery',  PRICE:1200,  QTY:1, Total:1200,   Date:new Date('2025-05-18'), STATUS:'Delivered' },
+  { OID:106, CUSTOMER:'Mehul Joshi', PRODUCT:'Bluetooth Speaker',CATEGORY:'Electronics', PRICE:2500,  QTY:1, Total:2500,   Date:new Date('2025-05-20'), STATUS:'Shipped'   },
+  { OID:107, CUSTOMER:'Sneha Rana',  PRODUCT:'Handbag',          CATEGORY:'Fashion',     PRICE:1800,  QTY:2, Total:3600,   Date:new Date('2025-05-22'), STATUS:'Delivered' },
+  { OID:103, CUSTOMER:'Nidhi Desai', PRODUCT:'Laptop',           CATEGORY:'Electronics', PRICE:65000, QTY:1, Total:65000,  Date:new Date('2025-05-19'), STATUS:'Delivered' },
+  { OID:101, CUSTOMER:'Riya Shah',   PRODUCT:'iPhone 13',        CATEGORY:'Electronics', PRICE:70000, QTY:1, Total:70000,  Date:new Date('2025-05-10'), STATUS:'Delivered' },
+  { OID:102, CUSTOMER:'Amit Patel',  PRODUCT:'T-shirt',          CATEGORY:'Fashion',     PRICE:500,   QTY:3, Total:1500,   Date:new Date('2025-05-12'), STATUS:'Shipped'   }
+])
+
+PART A
+-- Q: 1. Count unique customers per category
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$CATEGORY', uniqueCustomers:{ $addToSet:'$CUSTOMER' } } },
+  { $project: { _id:1, count:{ $size:'$uniqueCustomers' } } }
+])
+
+-- Q: 2. Highest order value per customer
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$CUSTOMER', maxOrder:{ $max:'$Total' } } }
+])
+
+-- Q: 3. Average order per product category
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$CATEGORY', avgOrder:{ $avg:'$Total' } } }
+])
+
+-- Q: 4. Group by customer and product, total units ordered
+db.Shopping_Order.aggregate([
+  { $group: { _id:{ customer:'$CUSTOMER', product:'$PRODUCT' }, totalQty:{ $sum:'$QTY' } } }
+])
+
+-- Q: 5. Group by product, avg qty and total revenue
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$PRODUCT', avgQty:{ $avg:'$QTY' }, totalRevenue:{ $sum:'$Total' } } }
+])
+
+-- Q: 6. Daily total products sold
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$Date', totalQty:{ $sum:'$QTY' } } }
+])
+
+-- Q: 7. Customers with total spend > 5000
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$CUSTOMER', totalSpend:{ $sum:'$Total' } } },
+  { $match: { totalSpend:{ $gt:5000 } } }
+])
+
+-- Q: 8. Average order value per status
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$STATUS', avgValue:{ $avg:'$Total' } } }
+])
+
+-- Q: 9. Top 3 highest revenue products
+db.Shopping_Order.aggregate([
+  { $group: { _id:'$PRODUCT', totalRev:{ $sum:'$Total' } } },
+  { $sort: { totalRev:-1 } },
+  { $limit: 3 }
+])
+
+-- Q: 10. Quantity of cancelled products
+db.Shopping_Order.aggregate([
+  { $match: { STATUS:'Cancelled' } },
+  { $group: { _id:null, totalQty:{ $sum:'$QTY' } } }
+])
+
+
+LAB 27 – Aggregate with Lookup (Joins) on Project/Manager/Department
+
+SETUP – Collections
+-- Project Collection
+db.Project.insertMany([
+  { PROJECT_ID:201, PROJECT_NAME:'Alpha Launch',    DEPARTMENT:'Marketing', BUDGET:120000, MANAGER_ID:101, STATUS:'Active',    START_DATE:new Date('2023-01-15') },
+  { PROJECT_ID:202, PROJECT_NAME:'Beta Upgrade',    DEPARTMENT:'IT',        BUDGET:80000,  MANAGER_ID:102, STATUS:'Completed', START_DATE:new Date('2022-05-01') },
+  { PROJECT_ID:203, PROJECT_NAME:'Gamma Research',  DEPARTMENT:'R&D',       BUDGET:150000, MANAGER_ID:103, STATUS:'Active',    START_DATE:new Date('2023-06-10') },
+  { PROJECT_ID:204, PROJECT_NAME:'Delta Expansion', DEPARTMENT:'Marketing', BUDGET:90000,  MANAGER_ID:101, STATUS:'Active',    START_DATE:new Date('2023-03-20') },
+  { PROJECT_ID:205, PROJECT_NAME:'Epsilon Launch',  DEPARTMENT:'IT',        BUDGET:110000, MANAGER_ID:104, STATUS:'Active',    START_DATE:new Date('2023-04-01') },
+  { PROJECT_ID:206, PROJECT_NAME:'Zeta Project',    DEPARTMENT:'R&D',       BUDGET:130000, MANAGER_ID:103, STATUS:'Completed', START_DATE:new Date('2022-12-10') },
+  { PROJECT_ID:207, PROJECT_NAME:'Eta Upgrade',     DEPARTMENT:'Finance',   BUDGET:70000,  MANAGER_ID:105, STATUS:'Active',    START_DATE:new Date('2023-02-15') }
+])
+
+-- Manager Collection
+db.Manager.insertMany([
+  { MANAGER_ID:101, NAME:'John Smith',  EMAIL:'john@example.com',  PHONE:'123-456-7890' },
+  { MANAGER_ID:102, NAME:'Alice Brown', EMAIL:'alice@example.com', PHONE:'234-567-8901' },
+  { MANAGER_ID:103, NAME:'Carol White', EMAIL:'carol@example.com', PHONE:'345-678-9012' },
+  { MANAGER_ID:104, NAME:'David Green', EMAIL:'david@example.com', PHONE:'456-789-0123' },
+  { MANAGER_ID:105, NAME:'Emma Black',  EMAIL:'emma@example.com',  PHONE:'567-890-1234' }
+])
+
+-- Department Collection
+db.Department.insertMany([
+  { DEPARTMENT:'Marketing', HEAD_MANAGER_ID:101 },
+  { DEPARTMENT:'IT',        HEAD_MANAGER_ID:102 },
+  { DEPARTMENT:'R&D',       HEAD_MANAGER_ID:103 },
+  { DEPARTMENT:'Finance',   HEAD_MANAGER_ID:105 },
+  { DEPARTMENT:'HR',        HEAD_MANAGER_ID:106 }
+])
+
+PART A
+-- Q: 1. All projects with manager details ($lookup)
+db.Project.aggregate([
+  { $lookup: { from:'Manager', localField:'MANAGER_ID', foreignField:'MANAGER_ID', as:'managerInfo' } }
+])
+
+-- Q: 2. Show project name and manager name
+db.Project.aggregate([
+  { $lookup: { from:'Manager', localField:'MANAGER_ID', foreignField:'MANAGER_ID', as:'mgr' } },
+  { $unwind: '$mgr' },
+  { $project: { PROJECT_NAME:1, managerName:'$mgr.NAME', _id:0 } }
+])
+
+-- Q: 3. All active projects with manager info
+db.Project.aggregate([
+  { $match: { STATUS:'Active' } },
+  { $lookup: { from:'Manager', localField:'MANAGER_ID', foreignField:'MANAGER_ID', as:'mgr' } },
+  { $unwind: '$mgr' }
+])
+
+-- Q: 4. Completed projects with manager name
+db.Project.aggregate([
+  { $match: { STATUS:'Completed' } },
+  { $lookup: { from:'Manager', localField:'MANAGER_ID', foreignField:'MANAGER_ID', as:'mgr' } },
+  { $unwind: '$mgr' },
+  { $project: { PROJECT_NAME:1, managerName:'$mgr.NAME', _id:0 } }
+])
+
+-- Q: 8. Projects started after Jan 1, 2023
+db.Project.find({ START_DATE: { $gt: new Date('2023-01-01') } }, { PROJECT_NAME:1, _id:0 })
+
+-- Q: 10. All departments and count of managers heading them
+db.Department.aggregate([
+  { $group: { _id:'$HEAD_MANAGER_ID', deptCount:{ $sum:1 } } }
+])
+
+PART B
+-- Q: 1. Count projects per manager
+db.Project.aggregate([
+  { $group: { _id:'$MANAGER_ID', projectCount:{ $sum:1 } } }
+])
+
+-- Q: 4. Managers with total budget handled
+db.Project.aggregate([
+  { $group: { _id:'$MANAGER_ID', totalBudget:{ $sum:'$BUDGET' } } },
+  { $lookup: { from:'Manager', localField:'_id', foreignField:'MANAGER_ID', as:'mgr' } },
+  { $unwind: '$mgr' },
+  { $project: { managerName:'$mgr.NAME', totalBudget:1, _id:0 } }
+])
+
+-- Q: 6. Manager with highest total project budget
+db.Project.aggregate([
+  { $group: { _id:'$MANAGER_ID', totalBudget:{ $sum:'$BUDGET' } } },
+  { $sort: { totalBudget:-1 } },
+  { $limit: 1 },
+  { $lookup: { from:'Manager', localField:'_id', foreignField:'MANAGER_ID', as:'mgr' } },
+  { $unwind: '$mgr' },
+  { $project: { managerName:'$mgr.NAME', totalBudget:1, _id:0 } }
+])
+
+-- Q: 11. Managers who do NOT manage any project
+db.Manager.aggregate([
+  { $lookup: { from:'Project', localField:'MANAGER_ID', foreignField:'MANAGER_ID', as:'projects' } },
+  { $match: { projects:{ $size:0 } } },
+  { $project: { NAME:1, _id:0 } }
+])
+
+
+LAB 28 – Index, Cursor, Schema Validation, Embedded, Multivalued Documents
+
+PART A – Use Stock collection from Lab 24
+-- Q: 1. Create index on 'company' field
+db.Stock.createIndex({ company: 1 })
+
+-- Q: 2. Compound index on 'sector' and 'sales'
+db.Stock.createIndex({ sector: 1, sales: -1 })
+
+-- Q: 3. List all indexes on Stock collection
+db.Stock.getIndexes()
+
+-- Q: 4. Drop index on company field
+db.Stock.dropIndex({ company: 1 })
+
+-- Q: 5. Use cursor to iterate all documents
+var cur = db.Stock.find()
+while (cur.hasNext()) { printjson(cur.next()) }
+
+-- Q: 6. Limit cursor to 3 documents
+db.Stock.find().limit(3).forEach(printjson)
+
+-- Q: 7. Cursor sorted by sales descending
+db.Stock.find().sort({ sales:-1 }).forEach(printjson)
+
+-- Q: 8. Skip first 2, return rest
+db.Stock.find().skip(2).forEach(printjson)
+
+-- Q: 9. Convert cursor to array
+db.Stock.find().toArray()
+
+-- Q: 10. Create 'Companies' collection with schema validation
+db.createCollection('Companies', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['company', 'sector'],
+      properties: {
+        company: { bsonType:'string', description:'Must be a string and is required' },
+        sector:  { bsonType:'string', description:'Must be a string and is required' }
+      }
+    }
+  },
+  validationAction: 'error'
+})
+
+PART B
+-- Q: 1. 'Scripts' collection with validation for eps, pe, roe
+db.createCollection('Scripts', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['eps','pe','roe'],
+      properties: {
+        eps: { bsonType:'double', description:'Required number' },
+        pe:  { bsonType:'double', description:'Required number' },
+        roe: { bsonType:'double', description:'Required number' }
+      }
+    }
+  }
+})
+
+-- Q: 2. 'Products' collection with embedded doc + multivalued array
+db.createCollection('Products')
+
+-- Example document structure:
+db.Products.insertOne({
+  name: 'iPhone 15',
+  price: 80000,
+  manufacturer: {              -- EMBEDDED DOCUMENT
+    name: 'Apple Inc.',
+    country: 'USA',
+    establishedYear: 1976
+  },
+  categories: ['Electronics', 'Mobile', 'Smart Devices']  -- MULTIVALUED ARRAY
+})
+
+PART C
+-- Q: 1. 'financial_Reports' collection with validation
+db.createCollection('financial_Reports', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['revenue'],
+      properties: {
+        revenue:    { bsonType:'double', minimum:0, description:'Required positive number' },
+        expenses:   { bsonType:'double' },
+        netIncome:  { bsonType:'double' }
+      }
+    }
+  }
+})
+
+-- Q: 2. 'Student' collection with embedded doc + multivalued arrays
+db.createCollection('Student')
+
+-- Example document structure:
+db.Student.insertOne({
+  name: {                          -- EMBEDDED DOCUMENT
+    firstName: 'Rahul',
+    lastName: 'Shah'
+  },
+  address: {                       -- EMBEDDED DOCUMENT
+    street: 'A-101 Vasant Vihar',
+    city: 'Rajkot',
+    pincode: '360001'
+  },
+  mobileNumbers: ['9876543210', '9123456789'],   -- MULTIVALUED
+  emailAddresses: ['rahul@gmail.com', 'rahul@college.edu'] -- MULTIVALUED
+})
+
+
+LAB 29 – MS SQL Server – Revision Lab
+📌 NOTE: This lab uses MS SQL Server. All queries below run in SQL Server Management Studio (SSMS).
+
+SETUP – Create Tables
+-- Create Database
+CREATE DATABASE SalesDB;
+USE SalesDB;
+
+-- CUSTOMER table
+CREATE TABLE CUSTOMER (
+  customer_id   INT PRIMARY KEY,
+  name          VARCHAR(100) NOT NULL,
+  email         VARCHAR(100) UNIQUE,
+  phone         VARCHAR(20),
+  location      VARCHAR(100)
+);
+
+-- PRODUCT table
+CREATE TABLE PRODUCT (
+  product_id  INT PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL,
+  category    VARCHAR(50),
+  price       DECIMAL(10,2) NOT NULL
+);
+
+-- SALES table
+CREATE TABLE SALES (
+  sale_id       INT PRIMARY KEY,
+  customer_id   INT FOREIGN KEY REFERENCES CUSTOMER(customer_id),
+  product_id    INT FOREIGN KEY REFERENCES PRODUCT(product_id),
+  sale_date     DATE NOT NULL,
+  quantity      INT NOT NULL,
+  total_amount  DECIMAL(10,2) NOT NULL
+);
+
+SETUP – Insert Data
+-- Insert Customers
+INSERT INTO CUSTOMER VALUES
+(1, 'Kairavi',  'kairavi@gmail.com',  '9876543210', 'Rajkot'),
+(2, 'Raj',      'raj@gmail.com',      '9123456789', 'Surat'),
+(3, 'Meena',    'meena@yahoo.com',    '9988776655', 'Ahmedabad'),
+(4, 'Amit',     'amit@hotmail.com',   '9090909090', 'Baroda'),
+(5, 'Sneha',    'sneha@gmail.com',    '9001234567', 'Rajkot');
+
+-- Insert Products
+INSERT INTO PRODUCT VALUES
+(101, 'iPhone 13',  'Electronics', 70000),
+(102, 'TV',         'Electronics', 20000),
+(103, 'T-Shirt',    'Fashion',     500),
+(104, 'Laptop',     'Electronics', 65000),
+(105, 'Book Set',   'Stationery',  1200);
+
+-- Insert Sales
+INSERT INTO SALES VALUES
+(1, 1, 101, '2025-01-10', 1, 70000),
+(2, 1, 102, '2025-01-15', 1, 20000),
+(3, 2, 102, '2025-02-05', 2, 40000),
+(4, 3, 103, '2025-02-10', 3, 1500),
+(5, 4, 104, '2025-03-01', 1, 65000),
+(6, 5, 105, '2025-03-15', 2, 2400),
+(7, 2, 101, '2025-04-01', 1, 70000),
+(8, 3, 104, '2025-04-10', 1, 65000);
+
+Queries 1–8
+-- Q: 1. Display customers who purchased TV worth price 20000
+SELECT C.name, P.name AS product, S.total_amount
+FROM SALES S
+JOIN CUSTOMER C ON C.customer_id = S.customer_id
+JOIN PRODUCT  P ON P.product_id  = S.product_id
+WHERE P.name = 'TV' AND P.price = 20000;
+
+-- Q: 2. Display highest selling item (by total revenue)
+SELECT TOP 1 P.name AS product,
+       SUM(S.total_amount) AS total_revenue
+FROM SALES S
+JOIN PRODUCT P ON P.product_id = S.product_id
+GROUP BY P.name
+ORDER BY total_revenue DESC;
+
+-- Q: 3. Stored procedure to update customer's contact info
+CREATE PROCEDURE sp_UpdateCustomerContact
+  @customer_id INT,
+  @new_email   VARCHAR(100),
+  @new_phone   VARCHAR(20)
+AS
+BEGIN
+  UPDATE CUSTOMER
+  SET email = @new_email, phone = @new_phone
+  WHERE customer_id = @customer_id;
+  PRINT 'Customer contact updated successfully.';
+END;
+
+-- Execute: EXEC sp_UpdateCustomerContact 1, 'new@gmail.com', '9000000001';
+
+-- Q: 4. Stored procedure to retrieve all sales by 'Kairavi'
+CREATE PROCEDURE sp_SalesByCustomer
+  @cname VARCHAR(100)
+AS
+BEGIN
+  SELECT S.sale_id, S.sale_date, P.name AS product,
+         S.quantity, S.total_amount
+  FROM SALES S
+  JOIN CUSTOMER C ON C.customer_id = S.customer_id
+  JOIN PRODUCT  P ON P.product_id  = S.product_id
+  WHERE C.name = @cname;
+END;
+
+-- Execute: EXEC sp_SalesByCustomer 'Kairavi';
+
+-- Q: 5. UDF to calculate total revenue from television sales
+CREATE FUNCTION fn_TvRevenue()
+RETURNS DECIMAL(12,2)
+AS
+BEGIN
+  DECLARE @rev DECIMAL(12,2);
+  SELECT @rev = SUM(S.total_amount)
+  FROM SALES S
+  JOIN PRODUCT P ON P.product_id = S.product_id
+  WHERE P.name = 'TV';
+  RETURN @rev;
+END;
+
+-- Call: SELECT dbo.fn_TvRevenue() AS TV_Total_Revenue;
+
+-- Q: 6. Trigger to prevent deleting customer who has purchases
+CREATE TRIGGER trg_PreventDeleteCustomer
+ON CUSTOMER
+INSTEAD OF DELETE
+AS
+BEGIN
+  IF EXISTS (SELECT 1 FROM SALES S
+             JOIN DELETED D ON D.customer_id = S.customer_id)
+  BEGIN
+    RAISERROR('Cannot delete customer who has made purchases.', 16, 1);
+    ROLLBACK;
+  END
+  ELSE
+  BEGIN
+    DELETE FROM CUSTOMER WHERE customer_id IN (SELECT customer_id FROM DELETED);
+  END
+END;
+
+-- Q: 7. Cursor to fetch all sales with customer and product details
+DECLARE @sale_id   INT,
+        @cname     VARCHAR(100),
+        @pname     VARCHAR(100),
+        @qty       INT,
+        @amount    DECIMAL(10,2),
+        @sdate     DATE;
+
+DECLARE sale_cursor CURSOR FOR
+  SELECT S.sale_id, C.name, P.name, S.quantity, S.total_amount, S.sale_date
+  FROM SALES S
+  JOIN CUSTOMER C ON C.customer_id = S.customer_id
+  JOIN PRODUCT  P ON P.product_id  = S.product_id;
+
+OPEN sale_cursor;
+FETCH NEXT FROM sale_cursor INTO @sale_id, @cname, @pname, @qty, @amount, @sdate;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+  PRINT 'Sale#' + CAST(@sale_id AS VARCHAR) + ' | ' + @cname + ' | ' + @pname +
+        ' | Qty:' + CAST(@qty AS VARCHAR) + ' | Rs.' + CAST(@amount AS VARCHAR);
+  FETCH NEXT FROM sale_cursor INTO @sale_id, @cname, @pname, @qty, @amount, @sdate;
+END;
+
+CLOSE sale_cursor;
+DEALLOCATE sale_cursor;
+
+-- Q: 8. Update product price with error handling (price cannot be negative)
+CREATE PROCEDURE sp_UpdateProductPrice
+  @product_id INT,
+  @new_price  DECIMAL(10,2)
+AS
+BEGIN
+  BEGIN TRY
+    IF @new_price < 0
+      THROW 50001, 'Price cannot be negative!', 1;
+
+    UPDATE PRODUCT SET price = @new_price
+    WHERE product_id = @product_id;
+    PRINT 'Price updated successfully.';
+  END TRY
+  BEGIN CATCH
+    PRINT 'ERROR: ' + ERROR_MESSAGE();
+  END CATCH
+END;
+
+-- Test: EXEC sp_UpdateProductPrice 101, -5000;  -- Will show error
+-- Test: EXEC sp_UpdateProductPrice 101, 72000;  -- Will update
+
+Query 9 – Regex in MongoDB (review format for MongoDB)
+📌 NOTE: MongoDB does not use SQL LIKE. Use regex patterns. These run in mongosh.
+-- Q: 9.1 Customers whose names start with J
+db.CUSTOMER.find({ name: /^J/ })
+
+-- Q: 9.2 Products whose names have minimum 5 characters
+db.PRODUCT.find({ name: /^.{5,}$/ })
+
+-- Q: 9.3 Customer names start AND end with vowels
+db.CUSTOMER.find({ name: /^[AEIOUaeiou].*[AEIOUaeiou]$/i })
+
+-- Q: 9.4 Emails ending with @gmail.com
+db.CUSTOMER.find({ email: /@gmail\.com$/ })
+
+-- Q: 9.5 Product names containing exactly two words
+db.PRODUCT.find({ name: /^\S+ \S+$/ })
+
+Query 10 – Aggregation in MongoDB
+-- Q: 10.1 Count products with price between 1000 and 5000
+db.PRODUCT.aggregate([
+  { $match: { price:{ $gte:1000, $lte:5000 } } },
+  { $count: 'productCount' }
+])
+
+-- Q: 10.2 Category-wise cheapest product
+db.PRODUCT.aggregate([
+  { $sort: { price:1 } },
+  { $group: { _id:'$category', cheapestProduct:{ $first:'$name' }, minPrice:{ $first:'$price' } } }
+])
+
+-- Q: 10.3 Display customers having same name
+db.CUSTOMER.aggregate([
+  { $group: { _id:'$name', count:{ $sum:1 } } },
+  { $match: { count:{ $gt:1 } } }
+])
+
+-- Q: 10.4 Count products whose name starts with vowel
+db.PRODUCT.aggregate([
+  { $match: { name: /^[AEIOUaeiou]/ } },
+  { $count: 'vowelProductCount' }
+])
+
+-- Q: 10.5 Category-wise count of products starting with vowel, sort by category desc
+db.PRODUCT.aggregate([
+  { $match: { name: /^[AEIOUaeiou]/ } },
+  { $group: { _id:'$category', count:{ $sum:1 } } },
+  { $sort: { _id:-1 } }
+])
+
+
+--- END OF LAB SOLUTIONS (Labs 19–29) ---
+Prepared for teaching | Darshan University | DBMS Lab 2301CS361
