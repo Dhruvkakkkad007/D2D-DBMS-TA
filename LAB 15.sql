@@ -1,6 +1,5 @@
 -- LAB 15: Triggers
 
-
 GO
 CREATE TABLE PersonInfo (
     PersonID   INT PRIMARY KEY,
