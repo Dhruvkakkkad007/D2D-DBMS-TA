@@ -128,9 +128,9 @@ Same operations as Part B, but performed via the MongoDB Compass graphical inter
   4. To drop: right-click collection → Drop Collection
 
 LAB 20 – find, limit, skip, sort
-📌 NOTE: Create Database: use BANK_INFO  |  Collection: Deposit
 
-SETUP – Create Database and Insert Data
+
+
 use BANK_INFO
 
 db.Deposit.insertMany([
@@ -1486,7 +1486,7 @@ END;
 -- Test: EXEC sp_UpdateProductPrice 101, 72000;  -- Will update
 
 Query 9 – Regex in MongoDB (review format for MongoDB)
-📌 NOTE: MongoDB does not use SQL LIKE. Use regex patterns. These run in mongosh.
+
 -- Q: 9.1 Customers whose names start with J
 db.CUSTOMER.find({ name: /^J/ })
 
